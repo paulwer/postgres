@@ -9,8 +9,8 @@
 }:
 
 stdenv.mkDerivation rec {
-  pname = "timescaledb-apache";
-  version = "2.9.1";
+  pname = "timescaledb";
+  version = "2.21.0";
 
   nativeBuildInputs = [ cmake ];
   buildInputs = [
@@ -23,14 +23,13 @@ stdenv.mkDerivation rec {
     owner = "timescale";
     repo = "timescaledb";
     rev = version;
-    hash = "sha256-fvVSxDiGZAewyuQ2vZDb0I6tmlDXl6trjZp8+qDBtb8=";
+    hash = "sha256-t3BPy1rmV3f/OFDHqiRh1E9tNH7dc1LCTktvkSSZLro=";
   };
 
   cmakeFlags = [
     "-DSEND_TELEMETRY_DEFAULT=OFF"
     "-DREGRESS_CHECKS=OFF"
     "-DTAP_CHECKS=OFF"
-    "-DAPACHE_ONLY=1"
   ] ++ lib.optionals stdenv.isDarwin [ "-DLINTER=OFF" ];
 
   # Fix the install phase which tries to install into the pgsql extension dir,
@@ -59,7 +58,7 @@ stdenv.mkDerivation rec {
     homepage = "https://www.timescale.com/";
     changelog = "https://github.com/timescale/timescaledb/blob/${version}/CHANGELOG.md";
     platforms = postgresql.meta.platforms;
-    license = licenses.asl20;
+    license = licenses.tsl;
     broken = versionOlder postgresql.version "13";
   };
 }
