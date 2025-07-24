@@ -21,14 +21,6 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: supabase/postgres/.github/actions/shared-checkout@HEAD
-      - name: aws-creds
-        uses: aws-actions/configure-aws-credentials@v4
-        if: ${{ github.secret_source == 'Actions' }}
-        with:
-          role-to-assume: ${{ secrets.DEV_AWS_ROLE }}
-          aws-region: "us-east-1"
-          output-credentials: true
-          role-duration-seconds: 7200
       - name: Setup cache script
         if: ${{ github.secret_source == 'Actions' }}
         run: |
