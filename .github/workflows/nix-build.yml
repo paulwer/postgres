@@ -16,13 +16,7 @@ permissions:
 
 jobs:
   build-run-image:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - runner: [self-hosted, linux, x86]
-            arch: amd64
-    runs-on: ${{ matrix.runner }}
+    runs-on: self-hosted
     timeout-minutes: 180
     steps:
       - name: Checkout Repo
