@@ -20,12 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - runner: large-linux-x86
+          - runner: [self-hosted, linux, x86]
             arch: amd64
-          - runner: large-linux-arm
-            arch: arm64
-          - runner: macos-latest-xlarge
-            arch: arm64
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 180
     steps:
@@ -39,19 +35,6 @@ jobs:
           aws-region: "us-east-1"
           output-credentials: true
           role-duration-seconds: 7200
-      - name: Setup AWS credentials for Nix
-        if: ${{ github.secret_source == 'Actions' }}
-        run: |
-          sudo -H aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-          sudo -H aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          sudo -H aws configure set aws_session_token $AWS_SESSION_TOKEN
-      - name: write secret key
-        # use python so we don't interpolate the secret into the workflow logs, in case of bugs
-        run: |
-          sudo mkdir -p /etc/nix
-          sudo -E python -c "import os; file = open('/etc/nix/nix-secret-key', 'w'); file.write(os.environ['NIX_SIGN_SECRET_KEY']); file.close()"
-        env:
-          NIX_SIGN_SECRET_KEY: ${{ secrets.NIX_SIGN_SECRET_KEY }}
       - name: Setup cache script
         if: ${{ github.secret_source == 'Actions' }}
         run: |
