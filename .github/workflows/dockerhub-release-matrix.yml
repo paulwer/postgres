@@ -44,11 +44,7 @@ jobs:
           '    
   build_release_image:
     needs: [build]
-    strategy:
-      matrix:
-        postgres: ${{ fromJson(needs.prepare.outputs.matrix_config).include }}
-        arch: [amd64, arm64]
-    runs-on: ${{ matrix.arch == 'amd64' && 'self-hosted' || 'large-linux-arm' }}
+    runs-on: self-hosted
     timeout-minutes: 180
     steps:
       - name: Checkout Repo
