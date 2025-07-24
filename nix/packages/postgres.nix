@@ -19,7 +19,6 @@
       ourExtensions = [
         ../ext/rum.nix
         ../ext/timescaledb.nix
-        ../ext/timescaledb-2.9.1.nix
         ../ext/pgroonga.nix
         ../ext/index_advisor.nix
         ../ext/wal2json.nix
@@ -52,9 +51,9 @@
 
       #Where we import and build the orioledb extension, we add on our custom extensions
       # plus the orioledb option
-      #we're not using timescaledb or plv8 in the orioledb-17 version or pg 17 of supabase extensions
+      #we're not using plv8 in the orioledb-17 version or pg 17 of supabase extensions
       orioleFilteredExtensions = builtins.filter (
-        x: x != ../ext/timescaledb.nix && x != ../ext/timescaledb-2.9.1.nix && x != ../ext/plv8.nix
+        x: x != ../ext/plv8.nix
       ) ourExtensions;
 
       orioledbExtensions = orioleFilteredExtensions ++ [ ../ext/orioledb.nix ];

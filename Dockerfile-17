@@ -14,7 +14,7 @@ ARG pgjwt_release=9742dab1b2f297ad3811120db7b21451bca2d3c9
 ARG pgsql_http_release=1.5.0
 ARG plpgsql_check_release=2.2.5
 ARG pg_safeupdate_release=1.4
-ARG timescaledb_release=2.9.1
+ARG timescaledb_release=2.21.0
 ARG wal2json_release=2_5
 ARG pljava_release=1.6.4
 ARG plv8_release=3.1.5
@@ -55,10 +55,10 @@ RUN apt update -y && apt install -y \
 RUN adduser --system  --home /var/lib/postgresql --no-create-home --shell /bin/bash --group --gecos "PostgreSQL administrator" postgres
 RUN adduser --system  --no-create-home --shell /bin/bash --group  wal-g
 RUN curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux \
---init none \
---no-confirm \
---extra-conf "substituters = https://cache.nixos.org https://nix-postgres-artifacts.s3.amazonaws.com" \
---extra-conf "trusted-public-keys = nix-postgres-artifacts:dGZlQOvKcNEjvT7QEAJbcV6b6uk7VF/hWMjhYleiaLI=% cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    --init none \
+    --no-confirm \
+    --extra-conf "substituters = https://cache.nixos.org https://nix-postgres-artifacts.s3.amazonaws.com" \
+    --extra-conf "trusted-public-keys = nix-postgres-artifacts:dGZlQOvKcNEjvT7QEAJbcV6b6uk7VF/hWMjhYleiaLI=% cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
 
 ENV PATH="${PATH}:/nix/var/nix/profiles/default/bin"
 
@@ -134,9 +134,9 @@ FROM base as gosu
 ARG TARGETARCH
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-   gnupg \
-   ca-certificates \
-   && rm -rf /var/lib/apt/lists/*
+    gnupg \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 # Download binary
 ARG GOSU_VERSION=1.16
 ARG GOSU_GPG_KEY=B42F6819007F00F88E364FD4036A9C25BF357DD4
@@ -185,9 +185,9 @@ RUN sed -i \
     mkdir -p /etc/postgresql-custom && \
     chown postgres:postgres /etc/postgresql-custom
 
-    # Remove items from postgresql.conf
+# Remove items from postgresql.conf
 RUN sed -i 's/ timescaledb,//g;' "/etc/postgresql/postgresql.conf" 
-    #as of pg 16.4 + this db_user_namespace totally deprecated and will break the server if setting is present
+#as of pg 16.4 + this db_user_namespace totally deprecated and will break the server if setting is present
 RUN sed -i 's/db_user_namespace = off/#db_user_namespace = off/g;' "/etc/postgresql/postgresql.conf" 
 RUN sed -i 's/ timescaledb,//g; s/ plv8,//g' "/etc/postgresql-custom/supautils.conf" 
 
